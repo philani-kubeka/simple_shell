@@ -60,9 +60,22 @@ void exec_command(char *command)
 	}
 	else if (pid == 0)
 	{
-		if (execve(command, (char *const *)&command, environ) == -1)
+		char **args = malloc(3 * sizeof(char *));
+
+		if (args == NULL)
 		{
-			perror(command);
+			perror("malloc");
+			_exit(EXIT_FAILURE);
+		}
+
+		args[0] = "ls";
+		args[1] = command;
+		args[2] = NULL;
+
+		if (execve(args[0], args, environ) == -1)
+		{
+			perror(args[0]);
+			free(args);
 			_exit(EXIT_FAILURE);
 		}
 	}
@@ -79,8 +92,8 @@ void exec_command(char *command)
 			exit_status = WEXITSTATUS(status);
 			if (exit_status != 0)
 			{
-				fprintf(stderr, "./simple_shell: %s: exit status: %d\n",
-						command, exit_status);
+				fprintf(stderr, "./simple_shell: %s: No such file or directory\n",
+						command);
 			}
 		}
 		else if (WIFSIGNALED(status))

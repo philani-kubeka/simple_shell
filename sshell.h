@@ -9,7 +9,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#define prompt "$"
+#define prompt "$ "
 #define buffer_size 256
 
 extern char **environ;
